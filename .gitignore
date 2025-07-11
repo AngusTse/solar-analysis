@@ -1,0 +1,12 @@
+# Python virtual environment
+venv/
+# Python cache
+__pycache__/
+*.pyc
+# Environment variables
+.env
+# Output files
+battery_simulation_result.csv
+# OS files
+.DS_Store
+output/*

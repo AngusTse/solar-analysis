@@ -1,5 +1,5 @@
 import requests
-from datetime import datetime, timedelta
+from datetime import datetime
 
 class SolarEdgeAPI:
     BASE_URL = "https://monitoringapi.solaredge.com"
@@ -16,15 +16,25 @@ class SolarEdgeAPI:
         return response.json()
 
     def get_energy_data(self, start_date: str, end_date: str) -> dict:
+        # Ensure dates are in YYYY-MM-DD format
+        if isinstance(start_date, datetime):
+            start_date = start_date.strftime("%Y-%m-%d")
+        if isinstance(end_date, datetime):
+            end_date = end_date.strftime("%Y-%m-%d")
         return self._make_request("energy", {
             "startDate": start_date,
             "endDate": end_date,
             "timeUnit": "DAY"
         })
 
-    def get_consumption_data(self, start_date: str, end_date: str) -> dict:
-        return self._make_request("consumption", {
-            "startDate": start_date,
-            "endDate": end_date,
+    def get_energy_details(self, start_date: str, end_date: str) -> dict:
+        # Ensure dates are in YYYY-MM-DD format
+        if isinstance(start_date, datetime):
+            start_date = start_date.strftime("%Y-%m-%d")
+        if isinstance(end_date, datetime):
+            end_date = end_date.strftime("%Y-%m-%d")
+        return self._make_request("energyDetails", {
+            "startTime": start_date + " 00:00:00",
+            "endTime": end_date + " 23:59:59",
             "timeUnit": "DAY"
         })

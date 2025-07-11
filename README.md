@@ -28,7 +28,9 @@ Simulate solar battery usage using SolarEdge API data and export daily analysis 
    ```
 
 5. **Set your SolarEdge API key and site ID as environment variables**  
-   Add the following lines to your `~/.bash_profile`, `~/.zshrc`, or a `.env` file:
+   You can either add the following lines to your `~/.bash_profile`, `~/.zshrc`, or create a `.env` file in the project directory:
+
+   **Option 1: Shell profile**
    ```sh
    export SE_API_KEY="your_api_key"
    export SE_SITE_ID="your_site_id"
@@ -38,6 +40,23 @@ Simulate solar battery usage using SolarEdge API data and export daily analysis 
    source ~/.bash_profile
    # or
    source ~/.zshrc
+   ```
+
+   **Option 2: .env file**  
+   Create a file named `.env` in the project directory with the following content:
+   ```
+   SE_API_KEY=your_api_key
+   SE_SITE_ID=your_site_id
+   ```
+
+   If using a `.env` file, install the `python-dotenv` package:
+   ```sh
+   pip install python-dotenv
+   ```
+   And add the following to the top of `battery_simulation.py`:
+   ```python
+   from dotenv import load_dotenv
+   load_dotenv()
    ```
 
 6. **Run the simulation**
