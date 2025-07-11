@@ -70,12 +70,14 @@ def run_simulation(
         consumption_by_date = meter_map.get('Consumption', {})
         feed_in_by_date = meter_map.get('FeedIn', {})
         purchased_by_date = meter_map.get('Purchased', {})
+        self_consumption_by_date = meter_map.get('SelfConsumption', {})
 
         for date in sorted(production_by_date.keys()):
             prod_kwh = (production_by_date.get(date, 0)) / 1000
             cons_kwh = (consumption_by_date.get(date, 0)) / 1000
             feed_in_kwh = (feed_in_by_date.get(date, 0)) / 1000
             purchased_kwh = (purchased_by_date.get(date, 0)) / 1000
+            self_consumption_kwh = (self_consumption_by_date.get(date, 0)) / 1000
 
             # Simulate battery behavior
             charge, discharge, feed_in_kwh_battery, purchased_kwh_battery = simulator.simulate_day(feed_in_kwh, purchased_kwh)
@@ -97,6 +99,7 @@ def run_simulation(
                 'date': date,
                 'production_kwh': prod_kwh,
                 'consumption_kwh': cons_kwh,
+                'self_consumption_kwh': self_consumption_kwh,
                 'import_from_grid_without_battery_kwh': import_without_battery,
                 'import_from_grid_without_battery_cost': cost_import_without_battery,
                 'feed_in_to_grid_without_battery_kwh': feed_in_without_battery,
@@ -124,10 +127,19 @@ if __name__ == "__main__":
         'end_date': date.today().strftime("%Y-%m-%d"),
         'grid_price_per_kwh': 0.344,
         'feed_in_tariff_per_kwh': 0.03,
-        'battery_capacity_kwh': 10.0,
         'battery_efficiency': 0.90,
         'daily_connection_fee': 0.898
     }
-    
-    results = run_simulation(**simulation_params)
-    print(f"Simulation complete. Results saved to battery_simulation_result.csv")
+
+    battery_capacities = [6.0, 10.0, 15.0]  # Example capacities in kWh
+
+    for capacity in battery_capacities:
+        print(f"Running simulation for battery_capacity_kwh={capacity}")
+        params = simulation_params.copy()
+        params['battery_capacity_kwh'] = capacity
+        df = run_simulation(**params)
+        output_file = f"output/battery_simulation_result_{capacity}kwh.csv"
+        df.to_csv(output_file, index=False)
+        print(f"Results saved to {output_file}")
+
+    print("All simulations complete.")
