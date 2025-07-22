@@ -1,82 +1,88 @@
-# Solar Battery Simulation
+# Solar Analysis
 
-Simulate solar battery usage using SolarEdge API data and export daily analysis results to a CSV file.
+This project provides tools for simulating and analyzing solar and battery savings using your SolarEdge data. You can use either a web interface or run simulations directly in the terminal.
 
-## Setup Instructions (macOS)
+## Features
+- Input simulation parameters (dates, prices, battery size, efficiency, cost, etc.)
+- Run battery savings simulation
+- View summary statistics and financial analysis
+- Interactive charts (Chart.js) for daily and monthly trends (web app)
+- Paginated results table (web app)
+- Export results to CSV (terminal and web app)
 
-1. **Install Python 3.9+**  
-   It's recommended to use Homebrew:
-   ```sh
-   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-   brew install python
-   ```
+## Setup
 
-2. **Clone this repository and navigate to the project folder**
-   ```sh
-   cd /path/to/solar-analysis
-   ```
+### 1. Clone the repository
+```bash
+git clone <repo-url>
+cd solar-analysis
+```
 
-3. **Create and activate a virtual environment**
-   ```sh
-   python3 -m venv venv
-   source venv/bin/activate
-   ```
+### 2. Create and activate a virtual environment
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
 
-4. **Install required libraries**
-   ```sh
-   pip install pandas requests
-   ```
+### 3. Install dependencies
+```bash
+pip install -r requirements.txt
+```
 
-5. **Set your SolarEdge API key and site ID as environment variables**  
-   You can either add the following lines to your `~/.bash_profile`, `~/.zshrc`, or create a `.env` file in the project directory:
+### 4. Set up SolarEdge API credentials
+Export your SolarEdge API key and site ID as environment variables:
+```bash
+export SE_API_KEY=your_solaredge_api_key
+export SE_SITE_ID=your_solaredge_site_id
+```
 
-   **Option 1: Shell profile**
-   ```sh
-   export SE_API_KEY="your_api_key"
-   export SE_SITE_ID="your_site_id"
-   ```
-   Then reload your shell or source the file:
-   ```sh
-   source ~/.bash_profile
-   # or
-   source ~/.zshrc
-   ```
-
-   **Option 2: .env file**  
-   Create a file named `.env` in the project directory with the following content:
-   ```
-   SE_API_KEY=your_api_key
-   SE_SITE_ID=your_site_id
-   ```
-
-   If using a `.env` file, install the `python-dotenv` package:
-   ```sh
-   pip install python-dotenv
-   ```
-   And add the following to the top of `battery_simulation.py`:
-   ```python
-   from dotenv import load_dotenv
-   load_dotenv()
-   ```
-
-6. **Run the simulation**
-   ```sh
-   python battery_simulation.py
-   ```
-
-## Input Parameters
-
-You can adjust simulation parameters in `battery_simulation.py`:
-- `start_date`, `end_date`: Date range (YYYY-MM-DD)
-- `grid_price_per_kwh`: Grid electricity price (e.g., 0.40)
-- `feed_in_tariff_per_kwh`: Solar export tariff (e.g., 0.08)
-- `battery_capacity_kwh`: Usable battery capacity (e.g., 10.0)
-- `battery_efficiency`: Battery round-trip efficiency (e.g., 0.90)
-- `daily_connection_fee`: Daily grid connection fee (e.g., 1.10)
-
-## Output
-
-Results are saved to `battery_simulation_result.csv` with columns:
-- date, production_kwh, consumption_kwh, grid_import_kwh, solar_export_kwh, battery_charge_kwh, battery_discharge_kwh, cost_without_battery, cost_with_battery, daily_savings
+You can add these lines to your `.env` or shell profile for convenience.
 
 ---
+
+## Running the Web App
+
+The web app provides a user-friendly interface for running simulations, viewing summaries, and exploring interactive charts.
+
+```bash
+venv/bin/python app.py
+```
+
+- Open [http://127.0.0.1:5000](http://127.0.0.1:5000) in your browser.
+- Enter or adjust the simulation parameters (dates, prices, battery size, battery cost, etc.).
+- Click **Run Simulation**.
+- View the summary, charts, and paginated results table.
+
+---
+
+## Running the Simulation in the Terminal
+
+You can also run the simulation directly from the terminal and export results to CSV.
+
+```bash
+venv/bin/python battery_simulation.py
+```
+
+- Adjust simulation parameters in `battery_simulation.py` as needed.
+- Results will be saved to the `output/` directory as CSV files.
+
+---
+
+## Notes
+- The app fetches data from the SolarEdge API for the specified date range.
+- All charting in the web app is done in the browser using Chart.js (no server-side plotting required).
+- You can adjust the battery cost to reflect your actual or quoted price.
+
+## Requirements
+- Python 3.8+
+- Flask
+- pandas
+- Chart.js (included via CDN in the template)
+
+## Troubleshooting
+- If you see errors about missing API keys, ensure you have set `SE_API_KEY` and `SE_SITE_ID` in your environment.
+- If you change code, restart the Flask server to see updates.
+
+---
+
+For questions or issues, please open an issue in this repository.
